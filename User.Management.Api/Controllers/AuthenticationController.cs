@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using System.ComponentModel.DataAnnotations;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -12,7 +14,7 @@ using User.Management.Service.Services;
 
 namespace User.Management.Api.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class AuthenticationController : ControllerBase
     {
@@ -128,6 +130,41 @@ namespace User.Management.Api.Controllers
             }
             return Unauthorized();
         }
+
+        // TODO : Not work due to message that couldn't be sent
+        //[HttpPost]
+        //[AllowAnonymous]
+        //public async Task<IActionResult> ForgotPassword([Required] string email)
+        //{
+        //    var user = await _userManager.FindByEmailAsync(email);
+
+        //    if(user != null)
+        //    {
+        //        var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+        //        var forgotPasswordLink = Url.Action(
+        //            "ResetPassword", "Authentication",
+        //            new {
+        //                token,
+        //                email = user.Email
+        //            },
+        //            Request.Scheme);
+
+        //        var message = new Message(new string[] {user.Email!}, "Forgot Password link", forgotPasswordLink!);
+
+        //        _emailService.SendEmail(message);
+
+        //        return StatusCode(StatusCodes.Status200OK,
+        //            new Response { Status = "Success", Message = $"{forgotPasswordLink}" });
+        //    }
+
+        //    return StatusCode(StatusCodes.Status400BadRequest,
+        //            new Response
+        //            {
+        //                Status = "error",
+        //                Message =
+        //            "Could not send link to email, please try again."
+        //            });
+        //}
 
         private JwtSecurityToken GetToken(List<Claim> authClaims)
         {
